@@ -1,15 +1,14 @@
-
-import { getAllPostsByCategory, getAllCategories } from '../../../lib/contentful';
+import { getAllPostsByCategory, getAllCategories } from '../../..//lib/contentful';
 import BlogClient from '../../../components/BlogClient';
 import { notFound } from 'next/navigation';
 
-type PageProps = {
+type CategoryPageProps = {
   params: {
     categorySlug: string;
   };
 };
 
-export default async function CategoryPage({ params }: PageProps) {
+export default async function CategoryPage({ params }: CategoryPageProps) {
   const posts = await getAllPostsByCategory(params.categorySlug);
 
   if (!posts || posts.length === 0) {
