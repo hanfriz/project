@@ -70,7 +70,7 @@ export async function getPostBySlug(slug: string) {
 // Fungsi: Ambil semua penulis
 export async function getAllAuthors() {
   try {
-    const response = await client.getEntries<any>({
+    const response = await client.getEntries({
       content_type: 'author',
       select: ['fields.name', 'fields.slug'],
       order: ['fields.name'],
