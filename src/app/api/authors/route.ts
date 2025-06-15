@@ -1,16 +1,12 @@
-
+// src/app/api/authors/route.ts
 import { NextResponse } from 'next/server';
-import { client } from '../../../lib/contentful';
+import { getAllAuthors } from '../../../lib/contentful';
 
 export async function GET() {
   try {
-    const res = await client.getEntries({
-      content_type: 'author',
-    });
-
-    return NextResponse.json({ authors: res.items });
+    const authors = await getAllAuthors();
+    return NextResponse.json({ authors });
   } catch (error) {
-    console.error('Error fetching authors:', error);
-    return new NextResponse('Failed to fetch authors', { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch authors' }, { status: 500 });
   }
 }
