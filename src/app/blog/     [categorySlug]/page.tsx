@@ -3,20 +3,13 @@ import { getAllPostsByCategory, getAllCategories } from '../../../lib/contentful
 import BlogClient from '../../../components/BlogClient';
 import { notFound } from 'next/navigation';
 
-type Props = {
+type PageProps = {
   params: {
     categorySlug: string;
   };
 };
 
-export async function generateStaticParams() {
-  const categories = await getAllCategories();
-  return categories.map((cat: any) => ({
-    categorySlug: cat.fields.slug,
-  }));
-}
-
-export default async function CategoryPage({ params }: Props) {
+export default async function CategoryPage({ params }: PageProps) {
   const posts = await getAllPostsByCategory(params.categorySlug);
 
   if (!posts || posts.length === 0) {
@@ -24,4 +17,12 @@ export default async function CategoryPage({ params }: Props) {
   }
 
   return <BlogClient initialPosts={posts} />;
+}
+
+export async function generateStaticParams() {
+  const categories = await getAllCategories();
+
+  return categories.map((category: any) => ({
+    categorySlug: category.fields.slug,
+  }));
 }

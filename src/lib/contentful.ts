@@ -22,21 +22,27 @@ export async function getAllCategories() {
 // Fungsi: Ambil semua post berdasarkan kategori (filter manual)
 export async function getAllPostsByCategory(slug: string) {
   try {
+    // Ambil dulu semua kategori
+    const categories = await getAllCategories();
+    const matchedCategory = categories.find(
+      (cat: any) => cat.fields.slug === slug
+    );
+
+    if (!matchedCategory) return [];
+
     const response = await client.getEntries({
       content_type: 'blogPost',
+      'fields.category.sys.id': matchedCategory.sys.id, // Ini yang benar
       include: 2,
     });
 
-    const filteredPosts = response.items.filter((post: any) => {
-      return post.fields.category?.fields?.slug === slug;
-    });
-
-    return filteredPosts;
+    return response.items;
   } catch (error) {
     console.error('Error fetching posts by category:', error);
     return [];
   }
 }
+
 
 // Fungsi: Ambil semua post
 export async function getAllPosts() {
