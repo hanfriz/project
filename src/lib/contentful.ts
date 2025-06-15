@@ -1,8 +1,8 @@
 import { createClient } from 'contentful';
 
- const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID ||'',
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN || '', 
+export const client = createClient({
+  space: process.env.CONTENTFUL_SPACE_ID || '',
+  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN || '',
 });
 
 // Fungsi: Ambil semua kategori
@@ -19,15 +19,19 @@ export async function getAllCategories() {
   }
 }
 
-// Fungsi: Ambil semua post berdasarkan kategori
+// Fungsi: Ambil semua post berdasarkan kategori (filter manual)
 export async function getAllPostsByCategory(slug: string) {
   try {
     const response = await client.getEntries({
       content_type: 'blogPost',
-      'fields.category.fields.slug': slug,
       include: 2,
     });
-    return response.items;
+
+    const filteredPosts = response.items.filter((post: any) => {
+      return post.fields.category?.fields?.slug === slug;
+    });
+
+    return filteredPosts;
   } catch (error) {
     console.error('Error fetching posts by category:', error);
     return [];
@@ -68,16 +72,12 @@ export async function getAllAuthors() {
   try {
     const response = await client.getEntries<any>({
       content_type: 'author',
-      select: ['fields.name,fields.slug'],
-      order: ['fields.name']
+      select: ['fields.name', 'fields.slug'],
+      order: ['fields.name'],
     });
-
     return response.items;
   } catch (error) {
     console.error('Error fetching authors:', error);
     return [];
   }
 }
-
-
-
