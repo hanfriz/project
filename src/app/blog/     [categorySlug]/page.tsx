@@ -1,14 +1,9 @@
-import { getAllPostsByCategory, getAllCategories } from '../../..//lib/contentful';
+import { getAllPostsByCategory, getAllCategories } from '../../../lib/contentful';
 import BlogClient from '../../../components/BlogClient';
 import { notFound } from 'next/navigation';
 
-type CategoryPageProps = {
-  params: {
-    categorySlug: string;
-  };
-};
-
-export default async function CategoryPage({ params }: CategoryPageProps) {
+// ✅ Ganti tipe CategoryPage jadi sesuai App Router
+export default async function CategoryPage({ params }: { params: { categorySlug: string } }) {
   const posts = await getAllPostsByCategory(params.categorySlug);
 
   if (!posts || posts.length === 0) {
@@ -18,6 +13,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   return <BlogClient initialPosts={posts} />;
 }
 
+// ✅ generateStaticParams WAJIB dan pastikan sesuai format
 export async function generateStaticParams() {
   const categories = await getAllCategories();
 
